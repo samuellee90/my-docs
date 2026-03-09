@@ -1,0 +1,7 @@
+- [홈](/)
+- Python
+  - [기본 문법](python/basics.md)
+  - [자주 쓰는 패턴](python/patterns.md)
+- Git
+  - [명령어 모음](git/commands.md)
+- [메모](memo.md)
