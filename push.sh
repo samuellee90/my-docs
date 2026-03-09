@@ -5,6 +5,12 @@
 MSG=${1:-"docs: update"}
 
 cd "$(dirname "$0")"
+
+# _sidebar.md 변경 시 sidebar.md에 자동 동기화
+if [ docs/_sidebar.md -nt docs/sidebar.md ] 2>/dev/null; then
+  cp docs/_sidebar.md docs/sidebar.md
+fi
+
 git add .
 git commit -m "$MSG"
 git push origin main
