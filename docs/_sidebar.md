@@ -4,4 +4,6 @@
   - [자주 쓰는 패턴](python/patterns.md)
 - Git
   - [명령어 모음](git/commands.md)
+- Linux / DevOps
+  - [Fluent Bit → OpenSearch → Grafana](linux/grafana-1.md)
 - [메모](memo.md)
