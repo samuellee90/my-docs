@@ -9,6 +9,7 @@
 - Linux / DevOps
   - [Fluent Bit → OpenSearch → Grafana](linux/grafana-1.md)
   - [Grafana 대시보드 - OpenSearch + Prometheus](linux/grafana-2.md)
+  - [K8s 컨테이너 로그 & Spark 이벤트 수집](linux/grafana-3.md)
 - Java
   - [FTP retrieveFile 무한 대기 해결](java/ftp-retrieve-hang.md)
   - [Java 21 람다식 가이드](java/lambda-java21.md)
