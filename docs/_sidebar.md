@@ -11,6 +11,7 @@
   - [Grafana 대시보드 - OpenSearch + Prometheus](linux/grafana-2.md)
 - Java
   - [Java 21 람다식 가이드](java/lambda-java21.md)
+  - [예외 처리 (Exception Handling)](java/exceptions.md)
 - Claude Code
   - [사용 가이드 & 예시](claude-code/how-to-use.md)
 - [메모](memo.md)
