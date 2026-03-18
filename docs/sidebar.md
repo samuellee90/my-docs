@@ -16,6 +16,6 @@
   - [예외 처리 (Exception Handling)](java/exceptions.md)
 - Claude Code
   - [사용 가이드 & 예시](claude-code/how-to-use.md)
-- CA
+- CS
   - [프로세스와 스레드](cs/process-thread.md)
 - [메모](memo.md)
