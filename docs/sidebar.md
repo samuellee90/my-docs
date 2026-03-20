@@ -15,6 +15,7 @@
   - [FTPClient 파라미터 전체 정리](java/ftp-parameters.md)
   - [FTP retrieveFile 무한 대기 해결](java/ftp-retrieve-hang.md)
   - [FTPClient 타임아웃 파라미터 심층 분석](java/ftp-timeout-deep-dive.md)
+  - [retrieveFile hang - setDataTimeout 누락 원인 분석](java/ftp-missing-datatimeout.md)
 - Claude Code
   - [사용 가이드 & 예시](claude-code/how-to-use.md)
 - CS 기초
