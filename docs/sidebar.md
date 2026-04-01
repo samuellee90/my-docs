@@ -27,6 +27,7 @@
 - Spring Boot
   - [logback.xml JSON 로그에 PID 주입](springboot/logback-pid.md)
   - [logstash-logback-encoder Provider 필드 정리](springboot/logback-providers.md)
+  - [Logback ERROR/TID 조건부 JSON 출력](springboot/logback-conditional-json.md)
 - CI/CD
   - [CI/CD 개요](cicd/overview.md)
   - [CI 파이프라인 (Jenkins)](cicd/ci-jenkins.md)
