@@ -84,6 +84,197 @@ logging:
         node-name: "node-01"
 ```
 
+### Java 소스코드 예시
+
+#### 프로젝트 구조
+
+```
+src/main/
+├─ java/com/example/
+│   ├─ filter/
+│   │   └─ TransactionIdFilter.java   ← tId MDC 설정
+│   ├─ service/
+│   │   └─ PaymentService.java        ← 비즈니스 로직 + 로그 호출
+│   └─ controller/
+│       └─ PaymentController.java     ← REST 엔드포인트
+└─ resources/
+    └─ application.yml                ← ECS 설정
+```
+
+#### application.yml
+
+```yaml
+spring:
+  application:
+    name: my-service
+
+logging:
+  structured:
+    format:
+      console: ecs
+    ecs:
+      service:
+        version: "1.0.0"
+        environment: "production"
+```
+
+#### TransactionIdFilter.java — tId를 MDC에 주입
+
+```java
+package com.example.filter;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.UUID;
+
+@Component
+@Order(1)
+public class TransactionIdFilter implements Filter {
+
+    private static final String TID_KEY = "tId";
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+
+        String tId = ((HttpServletRequest) request).getHeader("X-Transaction-Id");
+        if (tId == null || tId.isBlank()) {
+            tId = UUID.randomUUID().toString();
+        }
+
+        MDC.put(TID_KEY, tId);
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            MDC.remove(TID_KEY); // 반드시 정리 (스레드 풀 재사용 대비)
+        }
+    }
+}
+```
+
+> `MDC.put("tId", ...)` 하는 순간부터 해당 스레드의 모든 로그에 `tId` 필드가 자동으로 포함됩니다.
+
+#### PaymentService.java — 일반 로그 / 예외 로그
+
+```java
+package com.example.service;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+public class PaymentService {
+
+    public void processPayment(String orderId, int amount) {
+
+        // 일반 INFO 로그 — tId가 MDC에 있으므로 ECS JSON에 자동 포함
+        log.info("결제 요청 수신 orderId={} amount={}", orderId, amount);
+
+        try {
+            pay(orderId, amount);
+            log.info("결제 완료 orderId={}", orderId);
+
+        } catch (IllegalArgumentException e) {
+            // ERROR + Throwable → error.type / error.message / error.stack_trace 블록 자동 생성
+            log.error("결제 유효성 오류 orderId={}", orderId, e);
+            throw e;
+
+        } catch (Exception e) {
+            log.error("결제 처리 실패 orderId={}", orderId, e);
+            throw new RuntimeException("결제 오류", e);
+        }
+    }
+
+    private void pay(String orderId, int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("결제 금액은 0보다 커야 합니다. amount=" + amount);
+        }
+        // 결제 처리 로직 ...
+    }
+}
+```
+
+#### PaymentController.java
+
+```java
+package com.example.controller;
+
+import com.example.service.PaymentService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/payments")
+public class PaymentController {
+
+    private final PaymentService paymentService;
+
+    @PostMapping
+    public String pay(@RequestParam String orderId, @RequestParam int amount) {
+        log.info("결제 API 진입 orderId={}", orderId);
+        paymentService.processPayment(orderId, amount);
+        return "OK";
+    }
+}
+```
+
+#### 실제 출력 예시
+
+**정상 요청 (INFO, tId 있음)**
+
+```json
+{
+  "@timestamp": "2024-03-15T10:23:45.123Z",
+  "log.level": "INFO",
+  "log.logger": "com.example.service.PaymentService",
+  "process.pid": 12345,
+  "process.thread.name": "http-nio-8080-exec-3",
+  "service.name": "my-service",
+  "service.version": "1.0.0",
+  "service.environment": "production",
+  "message": "결제 요청 수신 orderId=ORD-001 amount=15000",
+  "tId": "a1b2-c3d4-e5f6-g7h8"
+}
+```
+
+> `tId` 필드는 MDC 값이 있을 때만 동적으로 포함됩니다.
+> MDC에 값이 없으면 `tId` 필드 자체가 출력되지 않습니다.
+
+**예외 발생 (ERROR + Throwable)**
+
+```json
+{
+  "@timestamp": "2024-03-15T10:23:45.456Z",
+  "log.level": "ERROR",
+  "log.logger": "com.example.service.PaymentService",
+  "process.pid": 12345,
+  "process.thread.name": "http-nio-8080-exec-3",
+  "service.name": "my-service",
+  "service.version": "1.0.0",
+  "service.environment": "production",
+  "message": "결제 유효성 오류 orderId=ORD-001",
+  "tId": "a1b2-c3d4-e5f6-g7h8",
+  "error": {
+    "type": "java.lang.IllegalArgumentException",
+    "message": "결제 금액은 0보다 커야 합니다. amount=0",
+    "stack_trace": "java.lang.IllegalArgumentException: 결제 금액은 0보다 커야 합니다. amount=0\n\tat com.example.service.PaymentService.pay(PaymentService.java:34)\n\t..."
+  }
+}
+```
+
+> `error` 블록은 `log.error("...", exception)` 처럼 Throwable을 전달했을 때만 자동 생성됩니다.
+
+---
+
 ### 특징
 
 | 항목 | 내용 |
