@@ -25,6 +25,7 @@
   - [Future & CompletableFuture](cs/future.md)
   - [SemaphoreConcurrencyLimiter](cs/semaphore-concurrency-limiter.md)
 - Spring Boot
+  - [ECS vs LoggingEventCompositeJsonEncoder 비교](springboot/ecs-vs-logback-json.md)
   - [logback.xml JSON 로그에 PID 주입](springboot/logback-pid.md)
   - [Logback ERROR/TID 조건부 JSON 출력](springboot/logback-conditional-json.md)
   - [Logback 코드 내부 값을 JSON으로 출력](springboot/logback-internal-values.md)
