@@ -20,6 +20,7 @@
   - [FTPClient 타임아웃 파라미터 심층 분석](java/ftp-timeout-deep-dive.md)
   - [CompositeJsonEncoder ECS 설정 & 동적 키 생성](java/logback-ecs-composite-dynamic-keys.md)
   - [PrettyPrintingDecorator + pattern 커스텀 필드](java/logback-pretty-print-pattern.md)
+  - [동적 필드 주입 — MDC · Arguments · Markers · Provider](java/logback-dynamic-fields.md)
 - DB
   - [Oracle 테이블 용량 확인 및 레코드 삭제](oracle/table-capacity.md)
 - Claude Code
