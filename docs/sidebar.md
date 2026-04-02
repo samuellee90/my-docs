@@ -6,6 +6,8 @@
   - [명령어 모음](git/commands.md)
 - Kubernetes
   - [핵심 가이드](kubernetes/k8s-core.md)
+- Observability
+  - [Prometheus Spark 메트릭 수집 파악하기](observability/prometheus-spark-metrics.md)
 - Linux / DevOps
   - [Fluent Bit → OpenSearch → Grafana](linux/grafana-1.md)
   - [Grafana 대시보드 - OpenSearch + Prometheus](linux/grafana-2.md)
