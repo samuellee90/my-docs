@@ -18,6 +18,7 @@
   - [FTPClient 파라미터 전체 정리](java/ftp-parameters.md)
   - [FTP retrieveFile 무한 대기 해결](java/ftp-retrieve-hang.md)
   - [FTPClient 타임아웃 파라미터 심층 분석](java/ftp-timeout-deep-dive.md)
+  - [CompositeJsonEncoder ECS 설정 & 동적 키 생성](java/logback-ecs-composite-dynamic-keys.md)
 - DB
   - [Oracle 테이블 용량 확인 및 레코드 삭제](oracle/table-capacity.md)
 - Claude Code
@@ -30,7 +31,6 @@
 - Spring Boot
   - [ECS vs LoggingEventCompositeJsonEncoder 비교](springboot/ecs-vs-logback-json.md)
   - [logback.xml JSON 로그에 PID 주입](springboot/logback-pid.md)
-  - [logstash-logback-encoder Provider 필드 정리](springboot/logback-providers.md)
   - [Logback ERROR/TID 조건부 JSON 출력](springboot/logback-conditional-json.md)
   - [Logback 코드 내부 값을 JSON으로 출력](springboot/logback-internal-values.md)
 - CI/CD
