@@ -18,6 +18,7 @@
   - [FTPClient 파라미터 전체 정리](java/ftp-parameters.md)
   - [FTP retrieveFile 무한 대기 해결](java/ftp-retrieve-hang.md)
   - [FTPClient 타임아웃 파라미터 심층 분석](java/ftp-timeout-deep-dive.md)
+  - [EcsEncoder 완전 가이드](java/logback-ecs-encoder.md)
   - [CompositeJsonEncoder ECS 설정 & 동적 키 생성](java/logback-ecs-composite-dynamic-keys.md)
   - [PrettyPrintingDecorator + pattern 커스텀 필드](java/logback-pretty-print-pattern.md)
   - [동적 필드 주입 — MDC · Arguments · Markers · Provider](java/logback-dynamic-fields.md)
